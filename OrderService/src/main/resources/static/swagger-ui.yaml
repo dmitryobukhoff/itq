@@ -1,0 +1,221 @@
+openapi: 3.0.3
+info:
+  title: OrderService API
+  description: OrderService endpoints
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080
+tags:
+  - name: OrderController
+    description: All actions with orders
+paths:
+
+  /api/v1/orders/create:
+    post:
+      tags:
+        - OrderController
+      summary: Creating new order
+      operationId: updatePet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreateDtoRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDtoResponse'          
+    
+  /api/v1/orders/{id}:
+    get:
+      tags:
+        - OrderController
+      summary: Receiving order by UUID
+      description: Endpoint receives the order by ID, throws an error if nothing is found
+      parameters:
+        - name: id
+          in: query
+          description: order identifier
+          required: false
+          explode: true
+          schema:
+            type: number
+            format: UUID
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderCreateDtoRequest'          
+    
+  /api/v1/orders/filter:
+    get:
+      tags:
+        - OrderController
+      summary: Receiving order(s) which not contains a product with certain article
+      description: Receiving all orders that have a high value of sum and are in the date interval
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderFilterDtoRequest'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDtoResponse'          
+  /api/v1/orders/order_without_article:
+    get:
+      tags:
+        - OrderController
+      summary: Receiving order(s) which not contains a product with certain article
+      description: Receiving all orders that don't have product without certain article
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderWithoutProductDtoRequest'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          type: array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDtoResponse'
+
+components:
+  schemas:
+    OrderCreateDtoRequest:
+      type: object
+      properties:
+        recipient:
+          type: string
+          example: Ivanon Ivan
+        address:
+          type: string
+          example: 458049, Астраханская область, город Подольск, пр. Косиора, 07
+        payment:
+          type: string
+          example: CASH
+          enum:
+            - CASH
+            - CARD
+        delivery:
+          type: string
+          example: COURIER
+          enum:
+            - COURIER
+            - PICKUP
+        details:
+          $ref: '#/components/schemas/OrderDetailsCreateDtoRequest'
+    OrderDetailsCreateDtoRequest:
+      type: object
+      properties:
+        article:
+          type: integer
+          example: 235187
+        name:
+          type: string
+          example: Поло Lacoste
+        amount:
+          type: integer
+          example: 1
+        cost:
+          type: number
+          format: double
+          example: 1000.0
+    OrderDtoResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          format: UUID
+          example: fcf72071-ca20-449f-b2a6-42de0e9406d2
+        number:
+          type: string
+          example: ab07c
+        sum:
+          type: number
+          format: double
+          example: 1000
+        date:
+          type: string
+          format: yyyy-MM-dd
+          example: "2024-07-01"
+        recipient:
+          type: string
+          example: Ivanon Ivan
+        address:
+          type: string
+          example: 458049, Астраханская область, город Подольск, пр. Косиора, 07
+        payment:
+          type: string
+          example: CASH
+          enum:
+            - CASH
+            - CARD
+        delivery:
+          type: string
+          example: COURIER
+          enum:
+            - COURIER
+            - PICKUP
+        details:
+          $ref: '#/components/schemas/OrderDetailsDtoResponse'
+    OrderDetailsDtoResponse:
+      type: object
+      properties:
+        article:
+          type: integer
+          example: 235187
+        name:
+          type: string
+          example: Поло Lacoste
+        amount:
+          type: integer
+          example: 1
+        cost:
+          type: number
+          format: double
+          example: 1000.0
+    OrderWithoutProductDtoRequest:
+      type: object
+      properties:
+        article:
+          type: integer
+          example: 234612
+        dateSince:
+          type: string
+          format: yyyy-MM-dd
+          example: "2024-07-01"
+        dateBefore:
+          type: string
+          format: yyyy-MM-dd
+          example: "2024-07-01"
+    OrderFilterDtoRequest:
+      type: object
+      properties:
+        sum:
+          type: number
+          format: double
+          example: 1800
+        date:
+          type: string
+          format: yyyy-MM-dd
+          example: "2024-07-01"

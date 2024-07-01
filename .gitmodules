@@ -1,0 +1,3 @@
+[submodule "NumberGenerate"]
+	path = NumberGenerate
+	url = https://github.com/dmitryobukhoff/NumberGenerate-Service.git
