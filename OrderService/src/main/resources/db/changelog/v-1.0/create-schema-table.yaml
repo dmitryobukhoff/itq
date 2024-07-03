@@ -1,0 +1,36 @@
+order_service:
+  orders:
+    - id: UUID
+      type: PRIMARY KEY
+      not_null: true
+    - order_number: VARCHAR(5)
+      type: UNIQUE
+      not_null: true
+    - order_sum: DOUBLE PRECISION
+      not_null: true
+    - order_date: DATE
+      not_null: true
+    - order_recipient: VARCHAR(255)
+      not_null: true
+    - order_address: VARCHAR(255)
+      not_null: true
+    - order_payment: VARCHAR(255)
+      not_null: true
+    - order_delivery: VARCHAR(255)
+      not_null: true
+  order_details:
+    - id: SERIAL
+      type: PRIMARY KEY
+      not_null: true
+    - product_article: INTEGER
+      not_null: true
+    - product_name: VARCHAR(255)
+      not_null: true
+    - product_amount: INTEGER
+      not_null: true
+    - product_cost: DOUBLE PRECISION
+      not_null: true
+    - order_id: UUID
+      type: FOREIGN KEY
+      reference: order_service.orders.id
+      on_delete: CASCADE

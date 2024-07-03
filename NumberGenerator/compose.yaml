@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+  number-generator:
+    build: .
+    image: number-generator
+    container_name: number-generator
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis

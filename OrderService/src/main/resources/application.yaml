@@ -5,11 +5,9 @@ spring:
         driver-class-name: org.postgresql.Driver
         username: postgres
         password: 1
-        url: jdbc:postgresql://localhost:5432/postgres
-    sql:
-        init:
-            mode: always
-            schema-locations: classpath*:static/db/init.sql
-            data-locations: classpath*:static/db/data.sql
+        url: jdbc:postgresql://postgres-db:5430/postgres
+    liquibase:
+        enabled: true
+        change-log: classpath*:db/db.changelog-master.yaml
 server:
     port: 8080

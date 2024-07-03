@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  order-service:
+    build: ./OrderService/
+    image: order-service
+    container_name: order-service-container
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_APPLICATION_NAME: OrderService
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1
+    depends_on:
+      - postgres-db
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    ports:
+      - "5430:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data/
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+  number-generator:
+    build: ./NumberGenerator/
+    image: number-generator
+    container_name: number-generator
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+volumes:
+  pgdata:

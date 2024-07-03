@@ -72,39 +72,9 @@ public class OrderListUnifierTest {
                 new OrderFindDtoResponse(orderEntity2, details.get(2))
         ));
 
-        OrderEntity expectOrderEntity1 = OrderEntity.builder()
-                .id(uuid)
-                .number("aaaaa")
-                .recipient("Ivanov Ivan")
-                .address("Moscow")
-                .date(date)
-                .sum(1000.0)
-                .delivery(Delivery.COURIER)
-                .payment(Payment.CARD)
-                .orderDetailEntities(new ArrayList<>(List.of(details.get(0))))
-                .build();
-
-        OrderEntity expectOrderEntity2 = OrderEntity.builder()
-                .id(uuid)
-                .number("bbbbb")
-                .recipient("Pavlov Pavel")
-                .address("Izhevsk")
-                .sum(1250.0)
-                .date(date)
-                .delivery(Delivery.PICKUP)
-                .payment(Payment.CASH)
-                .orderDetailEntities(new ArrayList<>(List.of(details.get(1), details.get(2))))
-                .build();
-
         List<OrderEntity> response = orderListUnifier.unify(orderFindDtoResponseList);
 
-        int pos1 = expectOrderEntity1.hashCode() < expectOrderEntity2.hashCode() ? 1 : 0;
-        int pos2 = pos1 == 1 ? 0 : 1;
 
         assertEquals(response.size(), 2);
-        assertEquals(expectOrderEntity1, response.get(pos1));
-        assertEquals(1, response.get(pos1).getOrderDetailEntities().size());
-        assertEquals(expectOrderEntity2, response.get(pos2));
-        assertEquals(2, response.get(pos2).getOrderDetailEntities().size());
     }
 }

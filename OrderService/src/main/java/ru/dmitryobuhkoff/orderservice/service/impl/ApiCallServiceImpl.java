@@ -1,6 +1,7 @@
 package ru.dmitryobuhkoff.orderservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -13,8 +14,9 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ApiCallServiceImpl implements ApiCallService {
-    private static final String URL = "http://localhost:8081/api/v1/generating/generate";
+    private static final String URL = "http://number-generator:8081/api/v1/generating/generate";
     private final RestTemplate restTemplate;
     @Override
     public ApiCallResponse requestForNumber(UUID uuid) throws RestClientException {
@@ -25,6 +27,7 @@ public class ApiCallServiceImpl implements ApiCallService {
         try {
             return restTemplate.getForObject(url, ApiCallResponse.class);
         }catch (RuntimeException exception){
+            log.error(exception.getMessage());
             throw new ApiCallException("Number Generate service not connected");
         }
     }
